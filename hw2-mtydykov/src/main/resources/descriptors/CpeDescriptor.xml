@@ -1,0 +1,31 @@
+<cpeDescription>
+    <collectionReader>
+        <collectionIterator>
+            <descriptor>
+                <import location="CollectionReader.xml"/>
+            </descriptor>
+        </collectionIterator>
+     </collectionReader>
+<!--     </collectionReader> -->
+    <casProcessors casPoolSize="2" processingUnitThreadCount="1">
+		<casProcessor deployment="integrated" name="Aggregate Annotator">
+	        <descriptor>
+                <import location ="hw2-mtydykov-aae.xml"/>
+            </descriptor>
+            <deploymentParameters/>
+            <filter></filter>
+            <errorHandling>
+                <errorRateThreshold action="terminate" value="100/1000"/>
+                <maxConsecutiveRestarts action="terminate" value="30"/>
+                <timeout max="100000"/>
+            </errorHandling>
+            <checkpoint batch="10000"/>
+        </casProcessor>
+    </casProcessors>
+    <cpeConfig>
+        <numToProcess>-1</numToProcess>
+        <deployAs>immediate</deployAs>
+        <checkpoint file="" time="300000"/>
+        <timerImpl></timerImpl>
+    </cpeConfig>
+</cpeDescription>

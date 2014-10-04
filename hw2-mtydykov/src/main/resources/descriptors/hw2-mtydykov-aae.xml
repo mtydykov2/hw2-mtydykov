@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+  <primitive>false</primitive>  
+  <delegateAnalysisEngineSpecifiers>
+    <delegateAnalysisEngine key="LingPipeAnnotator">
+      <import location="/root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/descriptors/LingPipeAnnotator.xml"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="SimpleAnnotator">
+      <import location="/root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/descriptors/SimpleAnnotator.xml"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="Comparator">
+      <import name="descriptors.Comparator"/>
+    </delegateAnalysisEngine>
+    <delegateAnalysisEngine key="Trainer">
+      <import name="descriptors.Trainer"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="Scorer">
+      <import name="descriptors.Scorer"/>
+    </delegateAnalysisEngine>
+  </delegateAnalysisEngineSpecifiers>
+  <analysisEngineMetaData>
+    <name>hw2-mtydykov-aae</name>
+    <description/>
+    <version>1.0</version>
+    <vendor/>
+    <configurationParameters searchStrategy="language_fallback"/>
+    <configurationParameterSettings/>
+    <flowConstraints>
+      <fixedFlow>
+        <node>LingPipeAnnotator</node>
+        <node>Comparator</node>
+      <node>Scorer</node>
+      </fixedFlow>
+    </flowConstraints>
+    <typePriorities/>
+    <fsIndexCollection/>
+    <capabilities>
+      <capability>
+        <inputs/>
+        <outputs/>
+        <languagesSupported/>
+      </capability>
+    </capabilities>
+  <operationalProperties>
+      <modifiesCas>true</modifiesCas>
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+      <outputsNewCASes>false</outputsNewCASes>
+    </operationalProperties>
+  </analysisEngineMetaData>
+  <resourceManagerConfiguration/>
+</analysisEngineDescription>
