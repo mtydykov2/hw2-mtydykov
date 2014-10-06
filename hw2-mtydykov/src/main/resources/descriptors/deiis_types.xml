@@ -80,7 +80,7 @@
       </features>
     </typeDescription>
   <typeDescription>
-      <name>edu.cmu.deiis.SentenceData</name>
+      <name>edu.cmu.deiis.types.SentenceData</name>
       <description/>
       <supertypeName>uima.tcas.Annotation</supertypeName>
       <features>
@@ -102,7 +102,7 @@
       </features>
     </typeDescription>
     <typeDescription>
-      <name>GeneMention</name>
+      <name>edu.cmu.deiis.types.GeneMention</name>
       <description/>
       <supertypeName>edu.cmu.deiis.types.Annotation</supertypeName>
       <features>
@@ -120,6 +120,11 @@
           <name>tokens</name>
           <description/>
           <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>featuresArray</name>
+          <description/>
+          <rangeTypeName>uima.cas.DoubleArray</rangeTypeName>
         </featureDescription>
       </features>
     </typeDescription>

@@ -14,8 +14,9 @@ import com.aliasi.chunk.Chunking;
 import com.aliasi.chunk.ConfidenceChunker;
 import com.aliasi.util.AbstractExternalizable;
 
-import edu.cmu.deiis.SentenceData;
+import edu.cmu.deiis.types.SentenceData;
 import edu.cmu.deiis.types.Annotation;
+import edu.cmu.deiis.types.GeneMention;
 
 /**
  * 
@@ -27,10 +28,12 @@ import edu.cmu.deiis.types.Annotation;
 
 public class LingPipeAnnotator extends JCasAnnotator_ImplBase {
 
+  private static final String LINGPIPE_ID = "0";
+
   private File modelFile = null;
 
   private final static String PARAM_MODEL_FILE = "ModelFileName";
-  private ConfidenceChunker chunker = null;
+  private Chunker chunker = null;
   @Override
   public void process(JCas arg0) throws AnalysisEngineProcessException {
 
@@ -38,27 +41,29 @@ public class LingPipeAnnotator extends JCasAnnotator_ImplBase {
     if (modelFile != null) {
       while (it.hasNext()) {
         SentenceData curr = (SentenceData) it.next();
-        Iterator<Chunk> chunkIterator = chunker.nBestChunks(curr.getSentText().toCharArray(), 0,
-                curr.getSentText().toCharArray().length, 1);
-        while (chunkIterator.hasNext()) {
-          Chunk c = chunkIterator.next();
+        Chunking chunkIterator = chunker.chunk(curr.getSentText().toCharArray(), 0,
+                curr.getSentText().toCharArray().length);
+        for(Chunk c: chunkIterator.chunkSet()){
           GeneMention mention = new GeneMention(arg0);
-          mention.setBeginAndEnd(c.start(), c.end(), curr);
+          mention.setSentenceId(curr.getSentId());
+          mention.setBeginAndEnd(c.start(), c.end(), curr.getSentText());
           mention.setMentionText(curr.getSentText().substring(c.start(),
                   c.end()));
-          mention.setSentenceId(curr.getSentText());
-          mention.setConfidence(Math.pow(2, c.score()));
-          mention.setCasProcessorId("LING");
+          mention.setSentenceId(curr.getSentId());
+          mention.setCasProcessorId(LINGPIPE_ID);
           mention.addToIndexes();
         }
       }
     }
   }
 
+  /**
+   * Load model file.
+   */
   public void initialize(UimaContext aContext) {
     this.modelFile = new File((String) aContext.getConfigParameterValue(PARAM_MODEL_FILE));
     try {
-      this.chunker = (ConfidenceChunker) AbstractExternalizable
+      this.chunker = (Chunker) AbstractExternalizable
               .readObject(modelFile);
     } catch (IOException e) {
       // TODO Auto-generated catch block

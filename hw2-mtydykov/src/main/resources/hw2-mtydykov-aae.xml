@@ -6,17 +6,23 @@
     <delegateAnalysisEngine key="LingPipeAnnotator">
       <import location="/root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/descriptors/LingPipeAnnotator.xml"/>
     </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="SimpleAnnotator">
-      <import location="/root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/descriptors/SimpleAnnotator.xml"/>
-    </delegateAnalysisEngine>
-  <delegateAnalysisEngine key="Comparator">
-      <import name="descriptors.Comparator"/>
+  <delegateAnalysisEngine key="Merger">
+      <import name="descriptors.Merger"/>
     </delegateAnalysisEngine>
     <delegateAnalysisEngine key="Trainer">
       <import name="descriptors.Trainer"/>
     </delegateAnalysisEngine>
   <delegateAnalysisEngine key="Scorer">
       <import name="descriptors.Scorer"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="AbnerTagger">
+      <import name="descriptors.AbnerTagger"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="FeatureExtractor">
+      <import name="descriptors.FeatureExtractor"/>
+    </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="Filterer">
+      <import name="descriptors.Filterer"/>
     </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
@@ -28,10 +34,12 @@
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
+        <node>AbnerTagger</node>
         <node>LingPipeAnnotator</node>
-        <node>Comparator</node>
-      <node>Scorer</node>
-      </fixedFlow>
+      <node>FeatureExtractor</node>
+      <node>Merger</node>
+      <node>Filterer</node>
+        </fixedFlow>
     </flowConstraints>
     <typePriorities/>
     <fsIndexCollection/>

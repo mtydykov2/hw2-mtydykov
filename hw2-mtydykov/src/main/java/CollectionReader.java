@@ -11,11 +11,13 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.util.FileUtils;
 import org.apache.uima.util.Progress;
 
-import edu.cmu.deiis.SentenceData;
+import edu.cmu.deiis.types.GeneMention;
+import edu.cmu.deiis.types.SentenceData;
 
 /**
  * 
- * This is a collection reader that takes an input file to be processed as a parameter.
+ * This is a collection reader that takes an input file to be processed as a parameter. If a gold
+ * standard file is provided, this reader also loads gold standard annotations for each sentence.
  * 
  * @author mtydykov
  * 
@@ -23,7 +25,11 @@ import edu.cmu.deiis.SentenceData;
 
 public class CollectionReader extends CollectionReader_ImplBase {
 
+  public static final String GOLD = "GOLD";
+
   private File myFile;
+
+  private File goldStandardFile;
 
   private int myCurrentIndex;
 
@@ -35,26 +41,35 @@ public class CollectionReader extends CollectionReader_ImplBase {
 
   public static final String PARAM_INPUTDIR = "InputDirectory";
 
+  public static final String PARAM_GOLDDIR = "GoldDirectory";
+
+  /**
+   * Loads an input file to be tagged and an optional gold standard file.
+   */
   public void initialize() {
     myFile = new File(((String) getConfigParameterValue(PARAM_INPUTDIR)).trim());
-    File goldStandardFile = new File("src/main/java/sample.out");
-    String goldStandardText = null;
-    try {
-      goldStandardText = FileUtils.file2String(goldStandardFile);
-    } catch (IOException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
-    String[] goldStandardSents = goldStandardText.split("\n");
-
-    for (String sent : goldStandardSents) {
-      String[] parts = sent.split("\\|");
-      String sentId = parts[0];
-      if (!goldStandardSentsToAnnotations.containsKey(sentId)) {
-        goldStandardSentsToAnnotations.put(sentId, new ArrayList<String>());
+    String goldStandardFileName = ((String) getConfigParameterValue(PARAM_GOLDDIR));
+    if(goldStandardFileName != null){
+      goldStandardFile = new File(goldStandardFileName.trim());
+      String goldStandardText = null;
+      try {
+        goldStandardText = FileUtils.file2String(goldStandardFile);
+      } catch (IOException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
       }
-      goldStandardSentsToAnnotations.get(sentId).add(sent);
+      String[] goldStandardSents = goldStandardText.split("\n");
+
+      for (String sent : goldStandardSents) {
+        String[] parts = sent.split("\\|");
+        String sentId = parts[0];
+        if (!goldStandardSentsToAnnotations.containsKey(sentId)) {
+          goldStandardSentsToAnnotations.put(sentId, new ArrayList<String>());
+        }
+        goldStandardSentsToAnnotations.get(sentId).add(sent);
+      }
     }
+
     myCurrentIndex = 0;
     try {
       text = FileUtils.file2String(myFile);
@@ -65,6 +80,10 @@ public class CollectionReader extends CollectionReader_ImplBase {
     sentences = text.split("\n");
   }
 
+  /**
+   * Loads sentence data for each sentence in the input file and also attaches gold standard
+   * annotations for each sentence, if these are provided.
+   */
   @Override
   public void getNext(CAS arg0) throws IOException, CollectionException {
     JCas myCas = null;
@@ -94,7 +113,7 @@ public class CollectionReader extends CollectionReader_ImplBase {
         goldMention.setBegin(begin);
         goldMention.setEnd(end);
         goldMention.setMentionText(mentionText);
-        goldMention.setCasProcessorId("GOLD");
+        goldMention.setCasProcessorId(GOLD);
         goldMention.addToIndexes();
       }
     }

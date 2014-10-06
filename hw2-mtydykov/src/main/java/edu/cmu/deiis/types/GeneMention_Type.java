@@ -1,3 +1,4 @@
+package edu.cmu.deiis.types;
 
 /* First created by JCasGen Tue Sep 30 23:45:12 EDT 2014 */
 
@@ -10,10 +11,9 @@ import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
 import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
-import edu.cmu.deiis.types.Annotation_Type;
 
 /** 
- * Updated by JCasGen Sat Oct 04 14:18:29 EDT 2014
+ * Updated by JCasGen Sun Oct 05 15:08:02 EDT 2014
  * @generated */
 public class GeneMention_Type extends Annotation_Type {
   /** @generated 
@@ -143,6 +143,57 @@ public class GeneMention_Type extends Annotation_Type {
     ll_cas.ll_setRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_tokens), i, v);
   }
  
+ 
+  /** @generated */
+  final Feature casFeat_featuresArray;
+  /** @generated */
+  final int     casFeatCode_featuresArray;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public int getFeaturesArray(int addr) {
+        if (featOkTst && casFeat_featuresArray == null)
+      jcas.throwFeatMissing("featuresArray", "GeneMention");
+    return ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setFeaturesArray(int addr, int v) {
+        if (featOkTst && casFeat_featuresArray == null)
+      jcas.throwFeatMissing("featuresArray", "GeneMention");
+    ll_cas.ll_setRefValue(addr, casFeatCode_featuresArray, v);}
+    
+   /** @generated
+   * @param addr low level Feature Structure reference
+   * @param i index of item in the array
+   * @return value at index i in the array 
+   */
+  public double getFeaturesArray(int addr, int i) {
+        if (featOkTst && casFeat_featuresArray == null)
+      jcas.throwFeatMissing("featuresArray", "GeneMention");
+    if (lowLevelTypeChecks)
+      return ll_cas.ll_getDoubleArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray), i, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray), i);
+  return ll_cas.ll_getDoubleArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray), i);
+  }
+   
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param i index of item in the array
+   * @param v value to set
+   */ 
+  public void setFeaturesArray(int addr, int i, double v) {
+        if (featOkTst && casFeat_featuresArray == null)
+      jcas.throwFeatMissing("featuresArray", "GeneMention");
+    if (lowLevelTypeChecks)
+      ll_cas.ll_setDoubleArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray), i, v, true);
+    jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray), i);
+    ll_cas.ll_setDoubleArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_featuresArray), i, v);
+  }
+ 
 
 
 
@@ -166,6 +217,10 @@ public class GeneMention_Type extends Annotation_Type {
  
     casFeat_tokens = jcas.getRequiredFeatureDE(casType, "tokens", "uima.cas.FSArray", featOkTst);
     casFeatCode_tokens  = (null == casFeat_tokens) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_tokens).getCode();
+
+ 
+    casFeat_featuresArray = jcas.getRequiredFeatureDE(casType, "featuresArray", "uima.cas.DoubleArray", featOkTst);
+    casFeatCode_featuresArray  = (null == casFeat_featuresArray) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_featuresArray).getCode();
 
   }
 }

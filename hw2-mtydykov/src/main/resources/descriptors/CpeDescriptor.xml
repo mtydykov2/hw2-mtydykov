@@ -10,7 +10,20 @@
     <casProcessors casPoolSize="2" processingUnitThreadCount="1">
 		<casProcessor deployment="integrated" name="Aggregate Annotator">
 	        <descriptor>
-                <import location ="hw2-mtydykov-aae.xml"/>
+                <import location ="../hw2-mtydykov-aae.xml"/>
+            </descriptor>
+            <deploymentParameters/>
+            <filter></filter>
+            <errorHandling>
+                <errorRateThreshold action="terminate" value="100/1000"/>
+                <maxConsecutiveRestarts action="terminate" value="30"/>
+                <timeout max="100000"/>
+            </errorHandling>
+            <checkpoint batch="10000"/>
+        </casProcessor>
+        		<casProcessor deployment="integrated" name="Output">
+	        <descriptor>
+                <import location ="Output.xml"/>
             </descriptor>
             <deploymentParameters/>
             <filter></filter>

@@ -1,17 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
 
-import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
@@ -23,104 +17,80 @@ import com.aliasi.stats.AnnealingSchedule;
 import com.aliasi.stats.LogisticRegression;
 import com.aliasi.stats.RegressionPrior;
 
-import edu.cmu.deiis.SentenceData;
-import edu.cmu.deiis.types.Token;
-import edu.stanford.nlp.util.ArrayUtils;
+import edu.cmu.deiis.types.GeneMention;
 
 /**
  * 
- * This is an annotator that uses LingPipe to extract gene mentions.
+ * This is class trains a linear regression classifier to decide which gene mentions to keep from
+ * various annotators.
  * 
  * @author mtydykov
  * 
  */
 
 public class Trainer extends JCasAnnotator_ImplBase {
-  
-  private HashMap<Double[], Integer> featureStrings = new HashMap<Double[], Integer>();
-  
+
+  private static final String MODEL_FILENAME = "model";
+
+  private static final int INT_INCORRECT = 0;
+
+  private static final int INT_CORRECT = 1;
+
+  private HashMap<double[], Integer> featureStrings = new HashMap<double[], Integer>();
+
   @Override
   public void process(JCas arg0) throws AnalysisEngineProcessException {
     FSIterator annotationIt = arg0.getAnnotationIndex(GeneMention.type).iterator();
-    FSIterator sentIterator = arg0.getAnnotationIndex(SentenceData.type).iterator();
-    SentenceData data = null;
-    while (sentIterator.hasNext()) {
-      data = (SentenceData) sentIterator.next();
-    }
-    HashMap<HashMap<Integer, Integer>, ArrayList<GeneMention>> tokensToAnnotations = new HashMap<HashMap<Integer, Integer>, ArrayList<GeneMention>>();
-    HashMap<Integer, Integer> correctTokenSpans = new HashMap<Integer, Integer>();
-    HashMap<HashMap<Integer, Integer>, HashSet<String>> tokenSpansToAnnotators = 
-            new HashMap<HashMap<Integer, Integer>, HashSet<String>>();
-    // organize all annotations into maps by annotation span
-    // TODO: need to somehow get actual token spans, not the entire annotation span
+    // 1. for each gene annotation, find # of annotators that overlapped
+    // 2. for each gene annotation, for each overlapping annotation look @ confidence of annotator
     while (annotationIt.hasNext()) {
-      GeneMention currentMention = (GeneMention) annotationIt.next();
-      String[] parts = currentMention.getMentionText().split("\\s");
-      int slotsBefore = 0;
-      for (int i = 0; i < parts.length; i++) {
-        HashMap<Integer, Integer> beginToEnd = new HashMap<Integer, Integer>();
-        int startIndex = currentMention.getBegin() + slotsBefore;
-        int endIndex = startIndex + parts[i].length();
-        if(i == parts.length - 1){
-          endIndex--;
+      GeneMention currMention = (GeneMention) annotationIt.next();
+      if (!currMention.getCasProcessorId().equals(CollectionReader.GOLD)) {
+        FSIterator annotationIt2 = arg0.getAnnotationIndex(GeneMention.type).iterator();
+        boolean isCorrect = false;
+        while (annotationIt2.hasNext()) {
+          GeneMention currOther = (GeneMention) annotationIt2.next();
+          // make sure not to add the same mention to overlaps map
+          if (!currOther.equals(currMention)) {
+            if (currOther.getCasProcessorId().equals(CollectionReader.GOLD)) {
+              if (currMention.getBegin() == currOther.getBegin()
+                      && currMention.getEnd() == currOther.getEnd()) {
+                isCorrect = true;
+              }
+            }
+          }
         }
-        beginToEnd.put(startIndex, endIndex);
-        if(currentMention.getCasProcessorId().equals("GOLD")){
-          correctTokenSpans.putAll(beginToEnd);
+        if (isCorrect) {
+          featureStrings.put(currMention.getFeaturesArray().toArray(), INT_CORRECT);
         } else {
-          if (!tokensToAnnotations.containsKey(beginToEnd)) {
-            tokensToAnnotations.put(beginToEnd, new ArrayList<GeneMention>());
-            tokenSpansToAnnotators.put(beginToEnd, new HashSet<String>());
-          }
-          if(!tokenSpansToAnnotators.get(beginToEnd).contains(currentMention.getCasProcessorId())){
-            tokensToAnnotations.get(beginToEnd).add(currentMention);
-            tokenSpansToAnnotators.get(beginToEnd).add(currentMention.getCasProcessorId()); 
-          }
+          featureStrings.put(currMention.getFeaturesArray().toArray(), INT_INCORRECT);
         }
-        slotsBefore = parts[i].length();
-      }
-    }
-
-    for (HashMap<Integer, Integer> tokenSpan : tokensToAnnotations.keySet()) {
-      Double[] vals = new Double[]{0.0};
-      for (int i = 0; i < tokensToAnnotations.get(tokenSpan).size(); i++) {
-        vals[i] = tokensToAnnotations.get(tokenSpan).get(i).getConfidence();
-      }
-      int key = tokenSpan.keySet().iterator().next();
-      int val = tokenSpan.values().iterator().next();
-      if(correctTokenSpans.containsKey(key) && correctTokenSpans.get(key) == val){
-        featureStrings.put(vals, 1);
-      } else {
-        featureStrings.put(vals, 0);
       }
     }
   }
-  
-  public void collectionProcessComplete(){
+
+  /**
+   * Perform the final model training once all sentences have been processed.
+   */
+  public void collectionProcessComplete() {
     Vector[] inputs = new Vector[this.featureStrings.size()];
     int[] outputsArray = new int[this.featureStrings.size()];
     int i = 0;
-    for(Entry<Double[], Integer> entry: this.featureStrings.entrySet()){
-      Double[] current = entry.getKey();
-      double[] inputsArray = new double[entry.getKey().length];
-      for(int j = 0; j < current.length; j++){
-        inputsArray[j] = current[j];
-      }
-      inputs[i] = new DenseVector(inputsArray);
+    for (Entry<double[], Integer> entry : this.featureStrings.entrySet()) {
+      double[] current = entry.getKey();
+      inputs[i] = new DenseVector(current);
       outputsArray[i] = entry.getValue();
       i++;
     }
-    
-    LogisticRegression regression = LogisticRegression.estimate(inputs,
-            outputsArray,
-            RegressionPrior.noninformative(),
-            AnnealingSchedule.inverse(.05,100),
-            null, // null reporter        
+
+    LogisticRegression regression = LogisticRegression.estimate(inputs, outputsArray,
+            RegressionPrior.noninformative(), AnnealingSchedule.inverse(.05, 100), null, // null
+                                                                                         // reporter
             0.000000001, // min improve
             1, // min epochs
-      10000);
+            10000);
     try {
-      regression.compileTo(new ObjectOutputStream(new FileOutputStream(new File("model"))));
+      regression.compileTo(new ObjectOutputStream(new FileOutputStream(new File(MODEL_FILENAME))));
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -128,6 +98,6 @@ public class Trainer extends JCasAnnotator_ImplBase {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
+
   }
 }

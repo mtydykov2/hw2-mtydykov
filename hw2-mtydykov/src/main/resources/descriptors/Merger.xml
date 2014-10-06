@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
-  <primitive>true</primitive>  <annotatorImplementationName>SimpleAnnotator</annotatorImplementationName>
+  <primitive>true</primitive>  <annotatorImplementationName>Merger</annotatorImplementationName>
   <analysisEngineMetaData>
-    <name>SimpleAnnotator</name>
+    <name>Comparator</name>
     <description/>
     <version>1.0</version>
     <vendor/>
-    <configurationParameters/>
-    <configurationParameterSettings/>
-    <typeSystemDescription>
-      <imports>
-        <import location="deiis_types.xml"/>
-      </imports>
-    </typeSystemDescription>
+    <configurationParameters>
+      <configurationParameter>
+        <name>numAnnotators</name>
+        <type>Integer</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
+    </configurationParameters>
+    <configurationParameterSettings>
+      <nameValuePair>
+        <name>numAnnotators</name>
+        <value>
+          <integer>2</integer>
+        </value>
+      </nameValuePair>
+    </configurationParameterSettings>
+    <typeSystemDescription/>
     <typePriorities/>
     <fsIndexCollection/>
     <capabilities>

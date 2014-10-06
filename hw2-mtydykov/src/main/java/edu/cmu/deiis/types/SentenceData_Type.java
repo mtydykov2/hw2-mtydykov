@@ -1,6 +1,6 @@
 
 /* First created by JCasGen Tue Sep 30 23:34:17 EDT 2014 */
-package edu.cmu.deiis;
+package edu.cmu.deiis.types;
 
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
@@ -14,7 +14,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** 
- * Updated by JCasGen Sat Oct 04 14:18:29 EDT 2014
+ * Updated by JCasGen Sun Oct 05 15:08:02 EDT 2014
  * @generated */
 public class SentenceData_Type extends Annotation_Type {
   /** @generated 

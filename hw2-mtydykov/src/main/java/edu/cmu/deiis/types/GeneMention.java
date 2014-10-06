@@ -1,3 +1,4 @@
+package edu.cmu.deiis.types;
 
 
 /* First created by JCasGen Tue Sep 30 23:45:12 EDT 2014 */
@@ -6,15 +7,12 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 import org.apache.uima.jcas.cas.FSArray;
-
-import edu.cmu.deiis.SentenceData;
-import edu.cmu.deiis.types.Annotation;
-
 import org.apache.uima.jcas.cas.TOP;
+import org.apache.uima.jcas.cas.DoubleArray;
 
 
 /** 
- * Updated by JCasGen Sat Oct 04 14:18:29 EDT 2014
+ * Updated by JCasGen Sun Oct 05 15:08:02 EDT 2014
  * XML source: /root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/descriptors/deiis_types.xml
  * @generated */
 public class GeneMention extends Annotation {
@@ -68,10 +66,17 @@ public class GeneMention extends Annotation {
     readObject();
   }   
 
-  public void setBeginAndEnd(int originalBegin, int originalEnd, SentenceData original) {
-    String before = original.getSentText().substring(0, originalBegin);
+  /**
+   * Given the original begin and end indexes for an annotation,
+   * convert these to non-whitespace indexes.
+   * @param originalBegin
+   * @param originalEnd
+   * @param sentText
+   */
+  public void setBeginAndEnd(int originalBegin, int originalEnd, String sentText) {
+    String before = sentText.substring(0, originalBegin);
     before = before.replaceAll("\\s+", "");
-    String after = original.getSentText().substring(0, originalEnd);
+    String after = sentText.substring(0, originalEnd);
     after = after.replaceAll("\\s+", "");
     this.setBegin(before.length());
     this.setEnd(after.length()-1);
@@ -174,6 +179,50 @@ public class GeneMention extends Annotation {
       jcasType.jcas.throwFeatMissing("tokens", "GeneMention");
     jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_tokens), i);
     jcasType.ll_cas.ll_setRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_tokens), i, jcasType.ll_cas.ll_getFSRef(v));}
+   
+    
+  //*--------------*
+  //* Feature: featuresArray
+
+  /** getter for featuresArray - gets 
+   * @generated
+   * @return value of the feature 
+   */
+  public DoubleArray getFeaturesArray() {
+    if (GeneMention_Type.featOkTst && ((GeneMention_Type)jcasType).casFeat_featuresArray == null)
+      jcasType.jcas.throwFeatMissing("featuresArray", "GeneMention");
+    return (DoubleArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_featuresArray)));}
+    
+  /** setter for featuresArray - sets  
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setFeaturesArray(DoubleArray v) {
+    if (GeneMention_Type.featOkTst && ((GeneMention_Type)jcasType).casFeat_featuresArray == null)
+      jcasType.jcas.throwFeatMissing("featuresArray", "GeneMention");
+    jcasType.ll_cas.ll_setRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_featuresArray, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for featuresArray - gets an indexed value - 
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public double getFeaturesArray(int i) {
+    if (GeneMention_Type.featOkTst && ((GeneMention_Type)jcasType).casFeat_featuresArray == null)
+      jcasType.jcas.throwFeatMissing("featuresArray", "GeneMention");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_featuresArray), i);
+    return jcasType.ll_cas.ll_getDoubleArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_featuresArray), i);}
+
+  /** indexed setter for featuresArray - sets an indexed value - 
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setFeaturesArray(int i, double v) { 
+    if (GeneMention_Type.featOkTst && ((GeneMention_Type)jcasType).casFeat_featuresArray == null)
+      jcasType.jcas.throwFeatMissing("featuresArray", "GeneMention");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_featuresArray), i);
+    jcasType.ll_cas.ll_setDoubleArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((GeneMention_Type)jcasType).casFeatCode_featuresArray), i, v);}
   }
 
 
