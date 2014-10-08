@@ -7,36 +7,10 @@
     <description/>
     <version>1.0</version>
     <vendor/>
-    <configurationParameters>
-      <configurationParameter>
-        <name>ModelFileName</name>
-        <description>Path of model file to run.</description>
-        <type>String</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-      </configurationParameter>
-    <configurationParameter>
-        <name>PARAM_MODEL_FILE</name>
-        <description>Model file path</description>
-        <type>String</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-      </configurationParameter>
-    </configurationParameters>
+    <configurationParameters searchStrategy="language_fallback">
+      </configurationParameters>
     <configurationParameterSettings>
-      <nameValuePair>
-        <name>ModelFileName</name>
-        <value>
-          <string>src/main/resources/models/ne-en-bio-genetag.HmmChunker</string>
-        </value>
-      </nameValuePair>
-    <nameValuePair>
-        <name>PARAM_MODEL_FILE</name>
-        <value>
-          <string>src/main/resources/models/ne-en-bio-genetag.HmmChunker</string>
-        </value>
-      </nameValuePair>
-    </configurationParameterSettings>
+      </configurationParameterSettings>
     <typeSystemDescription>
       <imports>
         <import location="deiis_types.xml"/>
