@@ -9,17 +9,17 @@
     <vendor/>
     <configurationParameters>
       <configurationParameter>
-        <name>numAnnotators</name>
-        <type>Integer</type>
+        <name>modelFileName</name>
+        <type>String</type>
         <multiValued>false</multiValued>
         <mandatory>false</mandatory>
       </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
-        <name>numAnnotators</name>
+        <name>modelFileName</name>
         <value>
-          <integer>2</integer>
+          <string>/models/myModel</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>

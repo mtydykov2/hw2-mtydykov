@@ -29,10 +29,12 @@ public class Merger extends JCasAnnotator_ImplBase {
 
   public static final String MERGED = "MERGED";
   private LogisticRegression classifier = null;
+  private final static String PARAM_MODELFILE = "modelFileName";
 
   public void initialize(UimaContext u) {
     try {
-      classifier = (LogisticRegression) AbstractExternalizable.readObject(new File("model"));
+      classifier = (LogisticRegression) AbstractExternalizable.readResourceObject((String) u
+              .getConfigParameterValue(PARAM_MODELFILE));
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {

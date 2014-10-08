@@ -39,7 +39,7 @@
       <node>FeatureExtractor</node>
       <node>Merger</node>
       <node>Filterer</node>
-        </fixedFlow>
+      </fixedFlow>
     </flowConstraints>
     <typePriorities/>
     <fsIndexCollection/>

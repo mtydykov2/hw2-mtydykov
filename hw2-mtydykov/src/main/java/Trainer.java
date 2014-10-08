@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
@@ -30,7 +31,6 @@ import edu.cmu.deiis.types.GeneMention;
 
 public class Trainer extends JCasAnnotator_ImplBase {
 
-  private static final String MODEL_FILENAME = "model";
 
   private static final int INT_INCORRECT = 0;
 
@@ -38,6 +38,14 @@ public class Trainer extends JCasAnnotator_ImplBase {
 
   private HashMap<double[], Integer> featureStrings = new HashMap<double[], Integer>();
 
+  private String modelFileName = "/root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/models/myModel";
+  private File modelFile = null;
+
+  // initialize model file to write to
+  public void initialize(UimaContext u){
+    modelFile = new File(modelFileName);
+  }
+  
   @Override
   public void process(JCas arg0) throws AnalysisEngineProcessException {
     FSIterator annotationIt = arg0.getAnnotationIndex(GeneMention.type).iterator();
@@ -90,7 +98,7 @@ public class Trainer extends JCasAnnotator_ImplBase {
             1, // min epochs
             10000);
     try {
-      regression.compileTo(new ObjectOutputStream(new FileOutputStream(new File(MODEL_FILENAME))));
+      regression.compileTo(new ObjectOutputStream(new FileOutputStream(modelFile)));
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
