@@ -3,16 +3,13 @@
   <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
   <primitive>false</primitive>  
   <delegateAnalysisEngineSpecifiers>
-    <delegateAnalysisEngine key="LingPipeAnnotator">
-      <import location="/root/git/hw2-mtydykov/hw2-mtydykov/src/main/resources/descriptors/LingPipeAnnotator.xml"/>
-    </delegateAnalysisEngine>
-  <delegateAnalysisEngine key="Merger">
+    <delegateAnalysisEngine key="Merger">
       <import name="descriptors.Merger"/>
     </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="Trainer">
+  <delegateAnalysisEngine key="Trainer">
       <import name="descriptors.Trainer"/>
     </delegateAnalysisEngine>
-  <delegateAnalysisEngine key="Scorer">
+    <delegateAnalysisEngine key="Scorer">
       <import name="descriptors.Scorer"/>
     </delegateAnalysisEngine>
   <delegateAnalysisEngine key="AbnerTagger">
@@ -24,6 +21,9 @@
   <delegateAnalysisEngine key="Filterer">
       <import name="descriptors.Filterer"/>
     </delegateAnalysisEngine>
+  <delegateAnalysisEngine key="LingPipeAnnotator">
+      <import name="descriptors.LingPipeAnnotator"/>
+    </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>hw2-mtydykov-aae</name>
@@ -34,8 +34,8 @@
     <configurationParameterSettings/>
     <flowConstraints>
       <fixedFlow>
-        <node>AbnerTagger</node>
         <node>LingPipeAnnotator</node>
+        <node>AbnerTagger</node>
       <node>FeatureExtractor</node>
       <node>Merger</node>
       <node>Filterer</node>
