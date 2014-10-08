@@ -20,7 +20,7 @@
       <nameValuePair>
         <name>outputFileName</name>
         <value>
-          <string>src/main/resources/data/hw2-mtydykov.out</string>
+          <string>hw2-mtydykov.out</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
