@@ -30,7 +30,7 @@ public class LingPipeAnnotator extends JCasAnnotator_ImplBase {
 
   private static final String LINGPIPE_ID = "0";
 
-  private final static String PARAM_MODEL_FILE = "ModelFileName";
+  private final static String PARAM_MODEL_FILE = "modelFileName";
 
   private Chunker chunker = null;
 
@@ -61,7 +61,7 @@ public class LingPipeAnnotator extends JCasAnnotator_ImplBase {
   public void initialize(UimaContext aContext) {
     try {
       this.chunker = (Chunker) AbstractExternalizable.readResourceObject((String) aContext
-              .getConfigParameterValue("PARAM_MODEL_FILE"));
+              .getConfigParameterValue(PARAM_MODEL_FILE));
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

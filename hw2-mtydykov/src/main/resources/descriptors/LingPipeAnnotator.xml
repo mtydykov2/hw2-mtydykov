@@ -9,7 +9,7 @@
     <vendor/>
     <configurationParameters>
       <configurationParameter>
-        <name>PARAM_MODEL_FILE</name>
+        <name>modelFileName</name>
         <description>Model file path</description>
         <type>String</type>
         <multiValued>false</multiValued>
@@ -18,7 +18,7 @@
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
-        <name>PARAM_MODEL_FILE</name>
+        <name>modelFileName</name>
         <value>
           <string>/models/ne-en-bio-genetag.HmmChunker</string>
         </value>

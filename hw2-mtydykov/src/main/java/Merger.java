@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -13,7 +12,6 @@ import com.aliasi.stats.LogisticRegression;
 import com.aliasi.util.AbstractExternalizable;
 
 import edu.cmu.deiis.types.GeneMention;
-import edu.cmu.deiis.types.SentenceData;
 
 /**
  * 
@@ -31,6 +29,9 @@ public class Merger extends JCasAnnotator_ImplBase {
   private LogisticRegression classifier = null;
   private final static String PARAM_MODELFILE = "modelFileName";
 
+  /**
+   * Initialize model file.
+   */
   public void initialize(UimaContext u) {
     try {
       classifier = (LogisticRegression) AbstractExternalizable.readResourceObject((String) u
@@ -43,6 +44,9 @@ public class Merger extends JCasAnnotator_ImplBase {
 
   }
 
+  /**
+   * Merge annotations.
+   */
   @Override
   public void process(JCas arg0) throws AnalysisEngineProcessException {
     FSIterator annotationIt = arg0.getAnnotationIndex(GeneMention.type).iterator();
